@@ -206,7 +206,8 @@ void PlanningSceneCollisionCheck::updateObjectPose(const std::string &id, const 
 Eigen::Isometry3d PlanningSceneCollisionCheck::getObjectPose(const std::string &id) const
 {
   std::scoped_lock _lock(planning_scene_mtx_);
-  const auto T = planning_scene_->getWorld()->getObject(id)->shape_poses_[0];
+  // const auto T = planning_scene_->getWorld()->getObject(id)->shape_poses_[0];
+  const auto T = planning_scene_->getFrameTransform(id);
   return T;
 }
 
@@ -472,4 +473,10 @@ std::stringstream PlanningSceneCollisionCheck::streamCurrentCollisionInfos()
 planning_scene::PlanningScenePtr& PlanningSceneCollisionCheck::getPlanningScene()
 {
   return planning_scene_;
+}
+
+robot_state::RobotState PlanningSceneCollisionCheck::getRobotCurrentState()
+{
+  robot_state::RobotState current_state = planning_scene_->getCurrentState();
+  return current_state;
 }

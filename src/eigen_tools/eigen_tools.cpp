@@ -17,3 +17,11 @@ std::pair<Eigen::Vector3d, Eigen::Vector4d> isometryToVectors(const Eigen::Isome
 
   return std::make_pair(pos, quat);
 }
+
+Eigen::Isometry3d isometryProduct(const Eigen::Isometry3d &transform_1, const Eigen::Isometry3d &transform_2)
+{
+  Eigen::Isometry3d transform_result;
+  transform_result.matrix() = transform_1.matrix() * transform_2.matrix();
+
+  return transform_result;
+}

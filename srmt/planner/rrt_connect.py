@@ -42,7 +42,7 @@ class SuhanRRTConnect(Planner):
         self.ub = ub
         
         # properties
-        self.max_distance = 0.1
+        self.max_distance = 0.2
 
         self.debug = True
 

@@ -125,5 +125,11 @@ class PlanningScene(object):
     def update_object_pose(self, object_id, pos, quat):
         self.pc.update_object_pose(object_id, np.array(pos, dtype=np.double),np.array(quat, dtype=np.double))
 
+    def get_object_pose(self, object_id):
+        return self.pc.get_object_pose(object_id)
+
     def print_current_collision_infos(self):
         self.pc.print_current_collision_infos()
+
+    def get_robot_current_state(self):
+        return self.pc.get_robot_current_state()

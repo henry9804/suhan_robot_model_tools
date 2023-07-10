@@ -77,6 +77,7 @@ public:
   void setDebugFilePrefix(const std::string &name) { debug_file_prefix_ = name; }
 
   planning_scene::PlanningScenePtr& getPlanningScene();
+  robot_state::RobotState getRobotCurrentState();
 
 private:
   std::vector<std::pair<std::string,int>> group_infos_;
