@@ -12,7 +12,7 @@
 #include "constraints/dual_chain_constraint_functions.h"
 #include "constraints/implicit_parallel_function.h"
 
-#include "visual_sim/visual_sim.h"
+// #include "visual_sim/visual_sim.h"
 
 BOOST_PYTHON_MODULE(suhan_robot_model_tools_wrapper_cpp)
 {
@@ -26,6 +26,7 @@ BOOST_PYTHON_MODULE(suhan_robot_model_tools_wrapper_cpp)
       
   bp::def("vectors_to_isometry",vectorsToIsometry);
   bp::def("isometry_to_vectors",isometryToVectors);
+  bp::def("isometry_product",isometryProduct);
 
   bp::class_<std::vector<std::string> > ("NameVector")
     .def(boost::python::vector_indexing_suite<std::vector<std::string> >())
@@ -225,6 +226,7 @@ BOOST_PYTHON_MODULE(suhan_robot_model_tools_wrapper_cpp)
       .def("set_early_stopping", &ParallelConstraint::setEarlyStopping)
       ;
 
+  void (PlanningSceneCollisionCheck::*applyCollisionObjectMsg1)(const moveit::py_bindings_tools::ByteString &msg) = &PlanningSceneCollisionCheck::applyCollisionObjectMsg;
   void (PlanningSceneCollisionCheck::*addBox1)(const Eigen::Ref<const Eigen::Vector3d> &dim, const std::string &id,
               const Eigen::Ref<const Eigen::Vector3d> &pos, const Eigen::Ref<const Eigen::Vector4d> &quat) = &PlanningSceneCollisionCheck::addBox;
   void (PlanningSceneCollisionCheck::*addCylinder1)(const Eigen::Ref<const Eigen::Vector2d> &dim, const std::string &id,
@@ -246,7 +248,9 @@ BOOST_PYTHON_MODULE(suhan_robot_model_tools_wrapper_cpp)
       .def("publish_planning_scene_msg", &PlanningSceneCollisionCheck::publishPlanningSceneMsg)
       .def("print_current_collision_infos", &PlanningSceneCollisionCheck::printCurrentCollisionInfos)
       .def("update_object_pose", updateObjectPose1)
+      .def("get_object_pose", &PlanningSceneCollisionCheck::getObjectPose)
       .def("update_joints", &PlanningSceneCollisionCheck::updateJoints)
+      .def("apply_collision_object_msg", applyCollisionObjectMsg1)
       .def("add_box", addBox1)
       .def("detach_all_objects", &PlanningSceneCollisionCheck::detachAllObjects)
       .def("add_cylinder", addCylinder1)
@@ -255,19 +259,20 @@ BOOST_PYTHON_MODULE(suhan_robot_model_tools_wrapper_cpp)
       .def("set_frame_id", &PlanningSceneCollisionCheck::setFrameID)
     //   .def("get_planning_scene", &PlanningSceneCollisionCheck::getPlanningScene)
       .def("get_planning_scene", &PlanningSceneCollisionCheck::getPlanningScene, bp::return_internal_reference<>())
+      .def("get_robot_current_state", &PlanningSceneCollisionCheck::getRobotCurrentState)
       ;
 
   bp::class_<std::shared_ptr<planning_scene::PlanningScene>, boost::noncopyable>("PlanningScene", bp::no_init);
 
-  bp::class_<VisualSim, boost::noncopyable>("VisualSim")
-      .def("lookat", &VisualSim::lookat)
-      .def("set_cam_pose", &VisualSim::setCamPose)
-      .def("set_cam_pos", &VisualSim::setCamPos)
-      .def("load_scene", &VisualSim::loadScene)
-      .def("generate_depth_image", &VisualSim::generateDepthImage)
-      .def("generate_voxel_occupancy", &VisualSim::generateVoxelOccupancy)
-      .def("set_grid_resolution", &VisualSim::setGridResolution)
-      .def("set_scene_bounds", &VisualSim::setSceneBounds)
-      ;
+//   bp::class_<VisualSim, boost::noncopyable>("VisualSim")
+//       .def("lookat", &VisualSim::lookat)
+//       .def("set_cam_pose", &VisualSim::setCamPose)
+//       .def("set_cam_pos", &VisualSim::setCamPos)
+//       .def("load_scene", &VisualSim::loadScene)
+//       .def("generate_depth_image", &VisualSim::generateDepthImage)
+//       .def("generate_voxel_occupancy", &VisualSim::generateVoxelOccupancy)
+//       .def("set_grid_resolution", &VisualSim::setGridResolution)
+//       .def("set_scene_bounds", &VisualSim::setSceneBounds)
+//       ;
 
 }

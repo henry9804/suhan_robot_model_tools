@@ -3,6 +3,7 @@ from moveit_ros_planning_interface._moveit_roscpp_initializer import roscpp_init
 import rospy
 import copy
 import numpy as np
+import io
 # import math
 from srmt.utils import ros_init
 
@@ -40,11 +41,18 @@ class PlanningSceneLight(object):
     def display(self):
         self.pc.publish_planning_scene_msg()
 
+    def apply_collision_object_msg(self, msg):
+        buff = io.BytesIO()
+        msg.serialize(buff)
+        self.pc.apply_collision_object_msg(buff.getvalue())
+
     def add_box(self, name, dim, pos, quat):
+        print(name)
         self.pc.add_box(np.array(dim,dtype=np.double),name,
                         np.array(pos, dtype=np.double),np.array(quat, dtype=np.double))
 
     def add_cylinder(self, name, height, radius, pos, quat):
+        print(name)
         self.pc.add_cylinder(np.array([height, radius],dtype=np.double), name, 
                              np.array(pos, dtype=np.double),np.array(quat, dtype=np.double))
 
@@ -70,8 +78,14 @@ class PlanningSceneLight(object):
     def update_object_pose(self, object_id, pos, quat):
         self.pc.update_object_pose(object_id, np.array(pos, dtype=np.double),np.array(quat, dtype=np.double))
 
+    def get_object_pose(self, object_id):
+        return self.pc.get_object_pose(object_id)
+
     def print_current_collision_infos(self):
         self.pc.print_current_collision_infos()
+
+    def get_robot_current_state(self):
+        return self.pc.get_robot_current_state()
 
     def display(self, group_name=None, q=None):
         if q is not None and group_name is not None:
@@ -189,3 +203,41 @@ class PlanningScene(PlanningSceneLight):
         q = self.add_gripper_to_q(q)
         return self.pc.is_valid(q)
 
+    def add_box(self, name, dim, pos, quat):
+        self.pc.add_box(np.array(dim,dtype=np.double),name,
+                        np.array(pos, dtype=np.double),np.array(quat, dtype=np.double))
+
+    def add_cylinder(self, name, height, radius, pos, quat):
+        self.pc.add_cylinder(np.array([height, radius],dtype=np.double), name, 
+                             np.array(pos, dtype=np.double),np.array(quat, dtype=np.double))
+
+    def add_sphere(self, name, radius, pos, quat):
+        self.pc.add_sphere(radius, name, 
+                           np.array(pos, dtype=np.double),np.array(quat, dtype=np.double))
+
+    def add_mesh(self, name, mesh_path, pos, quat):
+        self.pc.add_mesh_from_file(mesh_path, name, 
+                         np.array(pos, dtype=np.double),np.array(quat, dtype=np.double))
+
+    def attach_object(self, object_id, link_name, touch_links=[]):
+        _touch_links = NameVector()
+        
+        for tl in touch_links:
+            _touch_links.append(tl)
+        
+        self.pc.attach_object(object_id, link_name, _touch_links)
+
+    def detach_object(self, object_id, link_name):
+        self.pc.detach_object(object_id, link_name)
+
+    def update_object_pose(self, object_id, pos, quat):
+        self.pc.update_object_pose(object_id, np.array(pos, dtype=np.double),np.array(quat, dtype=np.double))
+
+    def get_object_pose(self, object_id):
+        return self.pc.get_object_pose(object_id)
+
+    def print_current_collision_infos(self):
+        self.pc.print_current_collision_infos()
+
+    def get_robot_current_state(self):
+        return self.pc.get_robot_current_state()

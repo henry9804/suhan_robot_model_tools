@@ -221,8 +221,20 @@ void PlanningSceneCollisionCheck::updateObjectPose(const std::string &id, const 
 Eigen::Isometry3d PlanningSceneCollisionCheck::getObjectPose(const std::string &id) const
 {
   std::scoped_lock _lock(planning_scene_mtx_);
-  const auto T = planning_scene_->getWorld()->getObject(id)->shape_poses_[0];
+  // const auto T = planning_scene_->getWorld()->getObject(id)->shape_poses_[0];
+  const auto T = planning_scene_->getFrameTransform(id);
   return T;
+}
+
+void PlanningSceneCollisionCheck::applyCollisionObjectMsg(const moveit::py_bindings_tools::ByteString &msg)
+{
+  moveit_msgs::CollisionObject co;
+  moveit::py_bindings_tools::deserializeMsg(msg, co);
+  
+{
+  std::scoped_lock _lock(planning_scene_mtx_);
+  planning_scene_->processCollisionObjectMsg(co);
+}
 }
 
 void PlanningSceneCollisionCheck::addBox(const Eigen::Ref<const Eigen::Vector3d> &dim, const std::string &id,
@@ -487,4 +499,10 @@ std::stringstream PlanningSceneCollisionCheck::streamCurrentCollisionInfos()
 planning_scene::PlanningScenePtr& PlanningSceneCollisionCheck::getPlanningScene()
 {
   return planning_scene_;
+}
+
+robot_state::RobotState PlanningSceneCollisionCheck::getRobotCurrentState()
+{
+  robot_state::RobotState current_state = planning_scene_->getCurrentState();
+  return current_state;
 }

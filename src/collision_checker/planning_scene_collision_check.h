@@ -14,6 +14,8 @@
 
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
+ #include <moveit/py_bindings_tools/serialize_msg.h>
+
 
 #define DEBUG_FILE(text) \
 if(debug_file_.is_open()) \
@@ -39,6 +41,8 @@ public:
   void updateObjectPose(geometry_msgs::Pose pose, const std::string &id);
   Eigen::Isometry3d getObjectPose(const std::string &id) const;
   void updateObjectPose(const std::string &id, const Eigen::Ref<const Eigen::Vector3d> &pos, const Eigen::Ref<const Eigen::Vector4d> &quat);
+
+  void applyCollisionObjectMsg(const moveit::py_bindings_tools::ByteString &msg);
 
   void addBox(const Eigen::Ref<const Eigen::Vector3d> &dim, const std::string &id,
               const Eigen::Ref<const Eigen::Vector3d> &pos, const Eigen::Ref<const Eigen::Vector4d> &quat);
@@ -78,6 +82,7 @@ public:
   void setDebugFilePrefix(const std::string &name) { debug_file_prefix_ = name; }
 
   planning_scene::PlanningScenePtr& getPlanningScene();
+  robot_state::RobotState getRobotCurrentState();
 
 private:
   std::vector<std::pair<std::string,int>> group_infos_;

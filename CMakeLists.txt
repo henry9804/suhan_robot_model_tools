@@ -18,8 +18,8 @@ find_package(catkin REQUIRED COMPONENTS
   moveit_ros_planning_interface
 )
 
-SET(OpenGL_GL_PREFERENCE "GLVND")
-find_package(gl_depth_sim)
+# SET(OpenGL_GL_PREFERENCE "GLVND")
+# find_package(gl_depth_sim)
 
 # find_package(Boost REQUIRED COMPONENTS python)
 find_package(PythonLibs 2.7 REQUIRED)
@@ -51,7 +51,7 @@ include_directories(
  ${Boost_INCLUDE_DIRS}
 #  ${RBDL_INCLUDE_DIR}
  ${OMPL_INCLUDE_DIRS}
- ${gl_depth_sim_INCLUDE_DIRS}
+#  ${gl_depth_sim_INCLUDE_DIRS}
  src
 )
 
@@ -64,7 +64,7 @@ add_library(suhan_robot_model_tools
   src/constraints/multi_chain_constraint_functions.cpp
   src/constraints/orientation_constraint_functions.cpp
   src/constraints/implicit_parallel_function.cpp
-  src/visual_sim/visual_sim.cpp
+  # src/visual_sim/visual_sim.cpp
 )
 
 add_library(suhan_robot_model_tools_wrapper_cpp src/suhan_robot_model_tools_warpper.cpp)
@@ -74,9 +74,9 @@ target_link_libraries(suhan_robot_model_tools
   ${RBDL_LIBRARY}
   ${OMPL_LIBRARIES}
   yaml-cpp
-  gl_depth_sim::gl_depth_sim
-  gl_depth_sim::glad
-  gl_depth_sim::gl_depth_sim_interfaces
+  # gl_depth_sim::gl_depth_sim
+  # gl_depth_sim::glad
+  # gl_depth_sim::gl_depth_sim_interfaces
 )
 
 target_link_libraries(suhan_robot_model_tools_wrapper_cpp 
@@ -86,9 +86,9 @@ target_link_libraries(suhan_robot_model_tools_wrapper_cpp
   ${RBDL_LIBRARY}
   ${OMPL_LIBRARIES}
   yaml-cpp
-  gl_depth_sim::gl_depth_sim
-  gl_depth_sim::glad
-  gl_depth_sim::gl_depth_sim_interfaces
+  # gl_depth_sim::gl_depth_sim
+  # gl_depth_sim::glad
+  # gl_depth_sim::gl_depth_sim_interfaces
 )
 
 set_target_properties(suhan_robot_model_tools_wrapper_cpp 
