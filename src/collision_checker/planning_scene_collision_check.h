@@ -14,13 +14,24 @@
 
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
- #include <moveit/py_bindings_tools/serialize_msg.h>
+#include <moveit/py_bindings_tools/serialize_msg.h>
 
 
 #define DEBUG_FILE(text) \
 if(debug_file_.is_open()) \
 { \
   debug_file_ << text << std::endl;\
+}
+
+const moveit::py_bindings_tools::ByteString getMeshFromFile(const std::string & file_name)
+{
+  shapes::Mesh *mesh = shapes::createMeshFromResource(file_name);
+  shapes::ShapeMsg shape_msg;
+  shapes::constructMsgFromShape(mesh, shape_msg);
+
+  shape_msgs::Mesh shape_msgs_mesh = boost::get<shape_msgs::Mesh>(shape_msg);
+
+  return moveit::py_bindings_tools::serializeMsg(shape_msgs_mesh);
 }
 
 class PlanningSceneCollisionCheck

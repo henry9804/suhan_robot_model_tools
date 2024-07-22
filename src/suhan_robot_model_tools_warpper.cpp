@@ -27,6 +27,8 @@ BOOST_PYTHON_MODULE(suhan_robot_model_tools_wrapper_cpp)
   bp::def("vectors_to_isometry",vectorsToIsometry);
   bp::def("isometry_to_vectors",isometryToVectors);
   bp::def("isometry_product",isometryProduct);
+  
+  bp::def("get_mesh_from_file", getMeshFromFile);
 
   bp::class_<std::vector<std::string> > ("NameVector")
     .def(boost::python::vector_indexing_suite<std::vector<std::string> >())

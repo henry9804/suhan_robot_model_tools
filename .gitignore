@@ -3,3 +3,4 @@
 *.dot
 *.npy
 *.pkl
+build/
